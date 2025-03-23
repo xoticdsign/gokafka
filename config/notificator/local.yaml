@@ -1,0 +1,9 @@
+client:
+  timeout: 10s
+
+kafka:
+  brokers:
+    - "localhost:9092"
+  group_id: "1"
+  topics:
+    - "my-topic"
