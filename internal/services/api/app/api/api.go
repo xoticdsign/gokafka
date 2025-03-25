@@ -11,11 +11,6 @@ import (
 	"gokafka/internal/services/api/utils/config"
 )
 
-type App struct {
-	Definition *definition.Definition
-	Log        *slog.Logger
-}
-
 func New(cfg config.Config, messaging *messaging.App, log *slog.Logger) (*App, error) {
 	definition := definition.New(cfg, messaging, log)
 
@@ -23,6 +18,11 @@ func New(cfg config.Config, messaging *messaging.App, log *slog.Logger) (*App, e
 		Definition: definition,
 		Log:        log,
 	}, nil
+}
+
+type App struct {
+	Definition *definition.Definition
+	Log        *slog.Logger
 }
 
 func (a *App) Run() error {

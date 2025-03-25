@@ -46,20 +46,32 @@ func New(cfg config.Config, messaging *messaging.App, log *slog.Logger) *Definit
 }
 
 type API struct {
-	Service *Service
+	Service api.Servicer
 	Log     *slog.Logger
 }
 
 func (a *API) Post(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	if r.Method != http.MethodPost {
+		resp, _ := json.Marshal(api.PostResponse{
+			Value: "method not allowed",
+		})
+
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		w.Write(resp)
 
 		return
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		resp, _ := json.Marshal(api.PostResponse{
+			Value: "bad request",
+		})
+
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(resp)
 
 		return
 	}
@@ -69,7 +81,12 @@ func (a *API) Post(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(body, &post)
 	if err != nil {
+		resp, _ := json.Marshal(api.PostResponse{
+			Value: "bad request",
+		})
+
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(resp)
 
 		return
 	}
@@ -79,7 +96,12 @@ func (a *API) Post(w http.ResponseWriter, r *http.Request) {
 		post.Value,
 	)
 	if err != nil {
+		resp, _ := json.Marshal(api.PostResponse{
+			Value: "internal error",
+		})
+
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(resp)
 
 		return
 	}
@@ -88,7 +110,6 @@ func (a *API) Post(w http.ResponseWriter, r *http.Request) {
 		Value: "post created",
 	})
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(resp)
 }
 
