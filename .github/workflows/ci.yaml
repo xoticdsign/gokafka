@@ -1,4 +1,4 @@
-name: API_CI
+name: CI
 
 on:
   - push
@@ -18,27 +18,30 @@ jobs:
       with:
         go-version: '1.22.5'
 
-    - name: Build
+    - name: Build API
       run: go build -o api cmd/api/main.go
 
-    - name: Upload Binary
+    - name: Build Notificator
+      run: go build -o notificator cmd/notificator/main.go
+
+    - name: Upload API Binary
       uses: actions/upload-artifact@v4
       with:
         name: api-binary
         path: api
+    
+    - name: Upload Notificator Binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: notificator-binary
+        path: notificator
 
   functional_tests:
     name: Functional Tests
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Download Binary
-      uses: actions/download-artifact@v4
-      with:
-        name: api-binary
 
     - name: Run Tests
       run: go test -run _Functional -v ./...
