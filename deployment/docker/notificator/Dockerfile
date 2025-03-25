@@ -5,15 +5,13 @@ WORKDIR /gokafka
 COPY . .
 
 RUN go mod download
-RUN go build -o build/api cmd/api/main.go
+RUN go build -o build/notificator cmd/notificator/main.go
 
 FROM gcr.io/distroless/base-debian12
 
-WORKDIR /api
+WORKDIR /notificator
 
-COPY --from=build gokafka/build/api .
+COPY --from=build gokafka/build/notificator .
 COPY --from=build gokafka/config ./config
 
-EXPOSE 8080
-
-CMD ["./api"]
+CMD ["./notificator"]
