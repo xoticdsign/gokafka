@@ -37,8 +37,8 @@ jobs:
       - name: Build and Push Images
         run: |
           docker compose --project-directory . --file deployment/docker/docker-compose.yaml build
-          docker tag ghcr.io/${{github.repository}} ghcr.io/${{github.repository}}:${{env.TAG}}
-          docker push ghcr.io/${{github.repository}}:${{env.TAG}}
+          docker tag ghcr.io/${{github.repository}} ghcr.io/${{github.repository}}:${{env.GIT_TAG}}
+          docker push ghcr.io/${{github.repository}}:${{env.GIT_TAG}}
 
           
         
