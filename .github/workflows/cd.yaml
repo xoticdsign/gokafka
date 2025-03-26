@@ -6,7 +6,7 @@ on:
     branches:
       - main 
     tags:
-      - v*
+      - "v*"
 
 jobs:
   
@@ -34,7 +34,7 @@ jobs:
           images: ghcr.io/${{github.repository}}
 
       - name: Build and Push Images
-        run: docker compose -f deployment/docker/docker-compose.yaml build --push
+        run: docker compose --project-directory . -f deployment/docker/docker-compose.yaml build --push
           
         
   
