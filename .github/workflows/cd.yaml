@@ -1,10 +1,8 @@
 name: CD 
 
 on:
-  
-  push:
-    tags:
-      - v*
+
+  push
 
 jobs:
   
@@ -19,9 +17,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4 
 
-      - name: Get Git Tag
-        run: echo "GIT_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -35,10 +30,7 @@ jobs:
           images: ghcr.io/${{github.repository}}
 
       - name: Build and Push Images
-        run: |
-          docker compose --project-directory . --file deployment/docker/docker-compose.yaml build
-          docker tag ghcr.io/${{github.repository}} ghcr.io/${{github.repository}}:${{env.GIT_TAG}}
-          docker push ghcr.io/${{github.repository}}:${{env.GIT_TAG}}
+        run: docker compose --project-directory . --file deployment/docker/docker-compose.yaml build --push
 
           
         
