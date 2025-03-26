@@ -5,7 +5,7 @@ services:
     build: 
       context: .
       dockerfile: deployment/docker/api/Dockerfile
-    image: ghcr.io/xoticdsign/api:1.0.0
+    image: ghcr.io/xoticdsign/api:${GIT_TAG-latest}
     container_name: api-1.0
     ports: 
       - "8080:8080"
@@ -18,7 +18,7 @@ services:
     build: 
       context: .
       dockerfile: deployment/docker/notificator/Dockerfile
-    image: ghcr.io/xoticdsign/notificator:1.0.0
+    image: ghcr.io/xoticdsign/notificator:${GIT_TAG-latest}
     container_name: notificator-1.0
     depends_on: 
       messaging:
