@@ -1,0 +1,41 @@
+name: CD 
+
+on:
+  
+  push:
+    branches:
+      - main 
+    tags:
+      - v*
+
+jobs:
+  
+  docker-deployment:
+    name: Docker Deployment 
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4 
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Extract Metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{github.repository}}
+
+      - name: Build and Push Images
+        run: docker compose -f deployment/docker/docker-compose.yaml build --push
+          
+        
+  
+    

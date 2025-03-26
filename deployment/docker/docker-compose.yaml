@@ -1,9 +1,11 @@
+name: gokafka
+
 services:
   api:
     build: 
       context: .
       dockerfile: deployment/docker/api/Dockerfile
-    image: api:1.0
+    image: ghcr.io/xoticdsign/api:1.0.0
     container_name: api-1.0
     ports: 
       - "8080:8080"
@@ -16,7 +18,7 @@ services:
     build: 
       context: .
       dockerfile: deployment/docker/notificator/Dockerfile
-    image: notificator:1.0
+    image: ghcr.io/xoticdsign/notificator:1.0.0
     container_name: notificator-1.0
     depends_on: 
       messaging:
@@ -26,7 +28,7 @@ services:
 
   messaging:
     image: apache/kafka:latest
-    container_name: messaging-1.0
+    container_name: messaging-1.0.0
     ports: 
       - "9092:9092"
     healthcheck:

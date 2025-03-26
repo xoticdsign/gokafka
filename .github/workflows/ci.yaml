@@ -1,8 +1,12 @@
 name: CI
 
 on:
-  - push
-  - pull_request
+
+  push:
+    branches:
+      - main 
+    tags:
+      - v*
 
 jobs:
 
@@ -11,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
     - name: Set up
       uses: actions/setup-go@v4
@@ -36,12 +41,13 @@ jobs:
         name: notificator-binary
         path: notificator
 
-  functional_tests:
+  functional-testing:
     name: Functional Tests
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
     - name: Run Tests
       run: go test -run _Functional -v ./...
