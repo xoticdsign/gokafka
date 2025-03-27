@@ -1,4 +1,4 @@
-name: API CD 
+name: API CI/CD
 
 on:
 
@@ -7,10 +7,39 @@ on:
       - api-*
 
 jobs:
-  
+
+  build:
+    name: Building Binary
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22.5'
+
+    - name: Build
+      run: go build -o build/api cmd/api/main.go
+
+  functional-testing:
+    name: Functional Tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Run Tests
+      run: go test -run _Functional -v ./internal/services/api/...
+
   docker-deployment:
     name: Docker Deployment 
     runs-on: ubuntu-latest
+    needs: functional-testing
     permissions:
       packages: write
       contents: read
