@@ -5,7 +5,7 @@ services:
     build: 
       context: .
       dockerfile: deployment/docker/api/Dockerfile
-    image: ghcr.io/xoticdsign/api
+    image: ghcr.io/xoticdsign/gokafka:api
     ports: 
       - "8080:8080"
     depends_on: 
@@ -17,7 +17,7 @@ services:
     build: 
       context: .
       dockerfile: deployment/docker/notificator/Dockerfile
-    image: ghcr.io/xoticdsign/notificator
+    image: ghcr.io/xoticdsign/gokafka:notificator
     depends_on: 
       messaging:
         condition: service_healthy
