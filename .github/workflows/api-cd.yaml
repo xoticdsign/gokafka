@@ -1,8 +1,10 @@
-name: CD 
+name: API CD 
 
 on:
 
-  push
+  push:
+    tags:
+      - api-*
 
 jobs:
   
@@ -24,15 +26,13 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Extract Metadata
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{github.repository}}
+      - name: Extract Version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/api-* ]]; then
+            echo "API_VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          fi
           
-      - name: Build and Push Images
-        run: docker compose --project-directory . --file deployment/docker/docker-compose.yaml build --push
-
-          
-        
-  
-    
+      - name: Build and Push Image
+        run: docker compose --project-directory . --file deployment/docker/docker-compose.yaml build api --push 
+        env:
+          API_VERSION: ${{env.API_VERSION}}
